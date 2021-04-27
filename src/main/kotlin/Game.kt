@@ -4,6 +4,8 @@ fun main(args: Array<String>) {
     val playerHealth = 99
     val isBlessed = true
     val isImmortal = false
+    var drinkLevel = 0
+    val MAX_DRINK_LEVEL = 50
 
     val auraColor = auraColor(isBlessed, playerHealth, isImmortal)
 
@@ -11,7 +13,30 @@ fun main(args: Array<String>) {
 
     printPlayerStatus(auraColor, isBlessed, playerName, healthStatus)
 
-    castFireball()
+    val drinkDiff = castFireball()
+    drinkLevel = incDrinkLevel(drinkLevel, MAX_DRINK_LEVEL, drinkDiff)
+    showDrinkLevel(drinkLevel)
+}
+
+private fun incDrinkLevel(drinkLevel: Int, maxDrinkLevel: Int, newDiff: Int): Int {
+    var newDrinkLevel = drinkLevel + newDiff
+    if (newDrinkLevel >= maxDrinkLevel) {
+       newDrinkLevel = maxDrinkLevel
+    }
+    return newDrinkLevel
+}
+
+private fun showDrinkLevel(drinkLevel: Int) {
+//    println("drinkLevel: $drinkLevel")
+    val drinkState = when (drinkLevel) {
+        in 1..10 -> "Tipsy"
+        in 11..20 -> "Sloshed"
+        in 21..30 -> "Soused"
+        in 31..40 -> "Stewed"
+        in 41..50 -> "Toasted"
+        else -> "undefined state"
+    }
+    println("drinkState: $drinkState")
 }
 
 private fun printPlayerStatus(
@@ -31,11 +56,7 @@ private fun auraColor(
     isBlessed: Boolean,
     playerHealth: Int,
     isImmortal: Boolean
-): String {
-    val auraVisible = isBlessed && playerHealth > 50 || isImmortal
-    val auraColor = if (auraVisible) "GREEN" else "NONE"
-    return auraColor
-}
+) = if (isBlessed && playerHealth > 50 || isImmortal) "GREEN" else "NONE"
 
 private fun formatHealthStatus(playerHealth: Int, isBlessed: Boolean) =
     when (playerHealth) {
@@ -50,5 +71,7 @@ private fun formatHealthStatus(playerHealth: Int, isBlessed: Boolean) =
         else -> "is awful"
     }
 
-private fun castFireball(numFireballs: Int = 2) =
+private fun castFireball(numFireballs: Int = 2): Int {
     println("A glass of Fireball springs into existence. (x$numFireballs)")
+    return numFireballs * 4
+}
