@@ -2,32 +2,43 @@ import kotlin.math.roundToInt
 
 const val TAVERN_NAME = "Taernyl's Folly"
 
-var playerGold = 10
-var playerSilver = 10
+//var playerGold = 10
+//var playerSilver = 10
+
+var playerDracoin = 5.00
+val dracoinKurs = 1.43
+
+var remainingDragonBreath = 40
 
 fun main(args: Array<String>) {
-//    placeOrder("shandy, Dragon's Breath, 5.91")
+    placeOrder("shandy, Dragon's Breath, 5.91")
+    placeOrder("shandy, Dragon's Breath, 5.91")
     placeOrder("elixir, Shirleys's Temple, 4.12")
 }
 
 fun performPurcase(price: Double) {
     displayBalance()
-    val totalPurse = playerGold + (playerSilver / 100.0)
-    println("Total purse: $totalPurse")
+//    val totalPurse = playerGold + (playerSilver / 100.0)
+    val totalPurse = playerDracoin * dracoinKurs
+    println("Total purse: ${"%.4f".format(totalPurse)}")
     println("Purchasing item for $price")
 
     val remainingBalance = totalPurse - price
-    println("Remaining balance: ${"%.2f".format(remainingBalance)}")
+//    println("Remaining balance: ${"%.2f".format(remainingBalance)}")
+    println("Remaining balance: ${"%.4f".format(remainingBalance)}")
 
-    val remainingGold = remainingBalance.toInt()
-    val remainingSilver = (remainingBalance % 1 * 100).roundToInt()
-    playerGold = remainingGold
-    playerSilver = remainingSilver
+//    val remainingGold = remainingBalance.toInt()
+//    val remainingSilver = (remainingBalance % 1 * 100).roundToInt()
+//    playerGold = remainingGold
+//    playerSilver = remainingSilver
+    val remainingDracoin = remainingBalance / dracoinKurs
+    playerDracoin = remainingDracoin
     displayBalance()
 }
 
 private fun displayBalance() {
-    println("Player's purse balance: Gold: $playerGold, Silver: $playerSilver")
+//    println("Player's purse balance: Gold: $playerGold, Silver: $playerSilver")
+    println("Player's purse balance: Dracoin: ${"%.4f".format(playerDracoin)}")
 }
 
 private fun placeOrder(menuData: String) {
@@ -36,6 +47,12 @@ private fun placeOrder(menuData: String) {
     println("Madrigal speaks with $tavernMaster about their order.")
 
     val (type, name, price) = menuData.split(", ")
+
+    if (!sufficientMoney(price.toDouble())) {
+        println("Not sufficient money for the order!")
+        return
+    }
+
     println("Madrigal buys a $name ($type) for $price")
 
     performPurcase(price.toDouble())
@@ -46,6 +63,11 @@ private fun placeOrder(menuData: String) {
         "Madrigal says: Thanks for the $name."
     }
     println(phrase)
+
+    if (name == "Dragon's Breath") {
+        remainingDragonBreath -= 1
+        println("Remaining Dragon's Breath: $remainingDragonBreath")
+    }
 }
 
 private fun toDragonSpeak(phrase: String) =
@@ -59,3 +81,9 @@ private fun toDragonSpeak(phrase: String) =
             else -> it.value
         }
     }
+
+private fun sufficientMoney(price: Double): Boolean {
+//    val totalPurse = playerGold + (playerSilver / 100.0)
+    val totalPurse = playerDracoin * dracoinKurs
+    return (totalPurse >= price)
+}
