@@ -1,3 +1,4 @@
+import java.io.File
 import kotlin.math.roundToInt
 
 const val TAVERN_NAME = "Taernyl's Folly"
@@ -5,9 +6,42 @@ const val TAVERN_NAME = "Taernyl's Folly"
 var playerGold = 10
 var playerSilver = 10
 
+val patronList = mutableListOf("Eli", "Mordoc", "Sophie")
+val lastName = listOf("Ironfoot", "Fernsworth", "Baggins")
+val uniquePatrons = mutableSetOf<String>()
+val menuList = File("/home/alex/IdeaProjects/NyetHack/src/data/tavern-menu-data.txt")
+    .readText()
+    .split("\n")
+
 fun main(args: Array<String>) {
-//    placeOrder("shandy, Dragon's Breath, 5.91")
-    placeOrder("elixir, Shirleys's Temple, 4.12")
+    if (patronList.contains("Eli")) {
+        println("The tavern master says: Eli's in the back playing cards.")
+    } else {
+        println("The tavern master says: Eli isn't here.")
+    }
+
+    if (patronList.containsAll(listOf("Sophie", "Mordoc"))) {
+        println("The tavern master says: Yea, they're seated by the stew kettle.")
+    } else {
+        println("The tavern master says: Nay, they departed hour ago.")
+    }
+
+//    placeOrder("elixir, Shirleys's Temple, 4.12")
+
+    (0..9).forEach {
+        val first = patronList.random()
+        val last = lastName.random()
+        val name = "$first $last"
+//        println(name)
+        uniquePatrons.add(name)
+    }
+    println(uniquePatrons)
+
+    var orderCount = 0
+    while (orderCount < 10) {
+        placeOrder(uniquePatrons.random(), menuList.random())
+        orderCount++
+    }
 }
 
 fun performPurcase(price: Double) {
@@ -30,20 +64,20 @@ private fun displayBalance() {
     println("Player's purse balance: Gold: $playerGold, Silver: $playerSilver")
 }
 
-private fun placeOrder(menuData: String) {
+private fun placeOrder(patronName: String, menuData: String) {
     val indexOfApostrophe = TAVERN_NAME.indexOf("\'")
     val tavernMaster = TAVERN_NAME.substring(0 until indexOfApostrophe)
-    println("Madrigal speaks with $tavernMaster about their order.")
+    println("$patronName speaks with $tavernMaster about their order.")
 
-    val (type, name, price) = menuData.split(", ")
-    println("Madrigal buys a $name ($type) for $price")
+    val (type, name, price) = menuData.split(",")
+    println("$patronName buys a $name ($type) for $price")
 
-    performPurcase(price.toDouble())
+//    performPurcase(price.toDouble())
 
     val phrase = if (name == "Dragon's Breath") {
-        "Madrigal exclaims: ${toDragonSpeak("Ah, delicious $name!")}"
+        "$patronName exclaims: ${toDragonSpeak("Ah, delicious $name!")}"
     } else {
-        "Madrigal says: Thanks for the $name."
+        "$patronName says: Thanks for the $name."
     }
     println(phrase)
 }
