@@ -37,11 +37,14 @@ fun main(args: Array<String>) {
     }
     println(uniquePatrons)
 
+
     var orderCount = 0
     while (orderCount < 10) {
         placeOrder(uniquePatrons.random(), menuList.random())
         orderCount++
     }
+
+    displayMenu()
 }
 
 fun performPurcase(price: Double) {
@@ -62,6 +65,71 @@ fun performPurcase(price: Double) {
 
 private fun displayBalance() {
     println("Player's purse balance: Gold: $playerGold, Silver: $playerSilver")
+}
+
+private fun displayMenu() {
+    val header = "*** Welcome to $TAVERN_NAME ***\n"
+    println(header)
+//    var shandy = ArrayList<ArrayList<String>>()
+    menuList.forEach { menuItem ->
+        var (type, name, price) = menuItem.split(",")
+//        if (type == "shandy")
+
+        var dotsLength = header.length - (name.length + price.length) - 1
+        if (dotsLength < 2) {
+            if (name.length < header.length) {
+                dotsLength = header.length - price.length - 1
+                val dotsForCurrent = createDots(header.length - name.length - 1)
+                name += "$dotsForCurrent\n"
+            } else { // если имя очень длинное, то разбиваем его на строки
+                val splittedName = name.split(" ")
+                var nameList = mutableListOf<String>()
+                var str = ""
+                var index = -1
+                splittedName.forEach {
+                    index ++
+                    if ("$str $it".trimStart().length < header.length) {
+                        str = "$str $it".trimStart()
+                    } else {
+                        nameList.add(str)
+                        str = it
+                    }
+                    if (index == splittedName.size - 1){
+                        nameList.add(str)
+                    }
+                }
+                // правим последнюю строку списка
+                var lastStr = nameList.last()
+                dotsLength = header.length - (lastStr.length + price.length) - 1
+                if (dotsLength < 2) {
+                    dotsLength = header.length - price.length - 1
+                    val dotsForCurrent = createDots(header.length - lastStr.length - 1)
+                    lastStr += "$dotsForCurrent\n"
+                    nameList[nameList.size - 1] = lastStr
+                }
+                // соединяем список обратно в одну строку
+                name = ""
+                index = -1
+                nameList.forEach {
+                    index ++
+                    name += it
+                    if (index != nameList.size - 1){
+                        name += "\n"
+                    }
+                }
+            }
+        }
+        val dots = createDots(dotsLength)
+        println("%s%s%s".format(name.capitalize(), dots, price))
+    }
+}
+
+private fun createDots(dotsLength: Int): String {
+    var dots = ""
+    (1..dotsLength).forEach {
+        dots += "."
+    }
+    return dots
 }
 
 private fun placeOrder(patronName: String, menuData: String) {
