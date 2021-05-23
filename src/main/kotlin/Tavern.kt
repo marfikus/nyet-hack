@@ -69,17 +69,20 @@ private fun displayBalance() {
 
 private fun displayMenu() {
     val header = "*** Welcome to $TAVERN_NAME ***\n"
+    var shandy = "${decorAndAlignCaption(header, "shandy")}\n"
+    var elixir = "${decorAndAlignCaption(header, "elixir")}\n"
+    var meal = "${decorAndAlignCaption(header, "meal")}\n"
+    var desert = "${decorAndAlignCaption(header, "desert dessert")}\n"
+
     println(header)
-//    var shandy = ArrayList<ArrayList<String>>()
     menuList.forEach { menuItem ->
         var (type, name, price) = menuItem.split(",")
-//        if (type == "shandy")
-
         var dotsLength = header.length - (name.length + price.length) - 1
+
         if (dotsLength < 2) {
             if (name.length < header.length) {
                 dotsLength = header.length - price.length - 1
-                val dotsForCurrent = createDots(header.length - name.length - 1)
+                val dotsForCurrent = createCharString('.', header.length - name.length - 1)
                 name += "$dotsForCurrent\n"
             } else { // если имя очень длинное, то разбиваем его на строки
                 val splittedName = name.split(" ")
@@ -103,7 +106,7 @@ private fun displayMenu() {
                 dotsLength = header.length - (lastStr.length + price.length) - 1
                 if (dotsLength < 2) {
                     dotsLength = header.length - price.length - 1
-                    val dotsForCurrent = createDots(header.length - lastStr.length - 1)
+                    val dotsForCurrent = createCharString('.', header.length - lastStr.length - 1)
                     lastStr += "$dotsForCurrent\n"
                     nameList[nameList.size - 1] = lastStr
                 }
@@ -119,17 +122,37 @@ private fun displayMenu() {
                 }
             }
         }
-        val dots = createDots(dotsLength)
-        println("%s%s%s".format(name.capitalize(), dots, price))
+
+        val dots = createCharString('.', dotsLength)
+//        println("%s%s%s".format(name.capitalize(), dots, price))
+
+        when (type) {
+            "shandy" -> shandy += "%s%s%s\n".format(name.capitalize(), dots, price)
+            "elixir" -> elixir += "%s%s%s\n".format(name.capitalize(), dots, price)
+            "meal" -> meal += "%s%s%s\n".format(name.capitalize(), dots, price)
+            "desert dessert" -> desert += "%s%s%s\n".format(name.capitalize(), dots, price)
+        }
     }
+
+    println(shandy.trimEnd('\n'))
+    println(elixir.trimEnd('\n'))
+    println(meal.trimEnd('\n'))
+    println(desert.trimEnd('\n'))
 }
 
-private fun createDots(dotsLength: Int): String {
+private fun createCharString(char: Char, dotsLength: Int): String {
     var dots = ""
     (1..dotsLength).forEach {
-        dots += "."
+        dots += char
     }
     return dots
+}
+
+private fun decorAndAlignCaption(mainCaption: String, subCaption: String): String {
+    val subCaptionDecorated = "~[$subCaption]~"
+    val spacesLength = (mainCaption.length - subCaptionDecorated.length) / 2
+    val spaces = createCharString(' ', spacesLength)
+    return "$spaces$subCaptionDecorated$spaces"
 }
 
 private fun placeOrder(patronName: String, menuData: String) {
