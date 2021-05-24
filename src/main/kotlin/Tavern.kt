@@ -37,7 +37,10 @@ fun main(args: Array<String>) {
 
     var orderCount = 0
     while (orderCount < 10) {
-        placeOrder(uniquePatrons.random(), menuList.random())
+        val patron = uniquePatrons.random()
+        if (checkPatron(patron)) {
+            placeOrder(patron, menuList.random())
+        }
         orderCount++
     }
 
@@ -71,6 +74,20 @@ private fun displayPatronBalances() {
     patronGold.forEach { patron, balance ->
         println("$patron balance: ${"%.2f".format(balance)}")
     }
+}
+
+private fun checkPatron(patronName: String): Boolean {
+    if (checkPatronBalance(patronName)) {
+        return true
+    } else {
+        patronGold.remove(patronName)
+        uniquePatrons.remove(patronName)
+        return false
+    }
+}
+
+private fun checkPatronBalance(patronName: String): Boolean {
+    return (patronGold.getOrDefault(patronName, 0.0).compareTo(0.0) > 0)
 }
 
 private fun toDragonSpeak(phrase: String) =
