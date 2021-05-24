@@ -1,3 +1,5 @@
+package com.bnr.nyethack
+
 import java.lang.Exception
 import java.lang.IllegalStateException
 
@@ -21,10 +23,10 @@ fun main(args: Array<String>) {
 
 
 fun proficiencyCheck(swordJuggling: Int?) {
-//    swordJuggling ?: throw UnskilledSwordJugglerException()
-    checkNotNull(swordJuggling, { "Player can not juggle swords!" })
+//    swordJuggling ?: throw com.bnr.nyethack.UnskilledSwordJugglerException()
+    checkNotNull(swordJuggling, { "com.bnr.nyethack.Player can not juggle swords!" })
 }
 
 
 class UnskilledSwordJugglerException() :
-    IllegalStateException("Player can not juggle swords!")
+    IllegalStateException("com.bnr.nyethack.Player can not juggle swords!")
