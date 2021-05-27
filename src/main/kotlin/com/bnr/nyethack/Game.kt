@@ -4,6 +4,12 @@ fun main(args: Array<String>) {
     val player = Player("Madrigal")
     printPlayerStatus(player)
     player.castFireball()
+
+//    var currentRoom = Room("Foyer")
+    var currentRoom = TownSquare()
+
+    println(currentRoom.description())
+    println(currentRoom.load())
 }
 
 private fun printPlayerStatus(player: Player) {
