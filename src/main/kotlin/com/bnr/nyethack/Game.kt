@@ -16,13 +16,15 @@ object Game {
         listOf(Room("Long Corridor"), Room("Generic Room"))
     )
 
+    private var gameStopped = false
+
     init {
         println("Welcome, adventurer!")
         player.castFireball()
     }
 
     fun play() {
-        while (true) {
+        while (!gameStopped) {
             println(currentRoom.description())
             println(currentRoom.load())
 
@@ -56,6 +58,35 @@ object Game {
             "Invalid direction: $directionInput."
         }
 
+    private fun stopGame(): String {
+        gameStopped = true
+        return "The game stopped"
+    }
+
+    private fun showMap(): String {
+        var map = ""
+        worldMap.forEach { list ->
+            list.forEach { room ->
+                if (room.name == currentRoom.name) {
+                    map += "X"
+                } else {
+                    map += "O"
+                }
+            }
+            map += "\n"
+        }
+
+        return map
+    }
+
+    private fun ringBell(): String {
+        if (currentRoom is TownSquare) {
+            return (currentRoom as TownSquare).ringBell()
+        } else {
+            return "There is no bells!"
+        }
+    }
+
     private class GameInput(arg: String?) {
         private val input = arg ?: ""
         val command = input.split(" ")[0]
@@ -63,10 +94,12 @@ object Game {
 
         fun processCommand() = when (command.toLowerCase()) {
             "move" -> move(argument)
+            "quit" -> stopGame()
+            "map" -> showMap()
+            "ring" -> ringBell()
             else -> commandNotFound()
         }
 
         private fun commandNotFound() = "I'm not quite sure what you're trying to do!"
-
     }
 }
