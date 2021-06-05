@@ -1,5 +1,6 @@
 package com.bnr.nyethack
 
+import com.bnr.nyethack.extensions.myRandom
 import java.io.File
 
 const val TAVERN_NAME = "Taernyl's Folly"
@@ -26,8 +27,10 @@ fun main(args: Array<String>) {
     }
 
     (0..9).forEach {
-        val first = patronList.random()
-        val last = lastName.random()
+//        val first = patronList.random()
+        val first = patronList.myRandom()
+//        val last = lastName.random()
+        val last = lastName.myRandom()
         val name = "$first $last"
         uniquePatrons.add(name)
     }
@@ -38,7 +41,8 @@ fun main(args: Array<String>) {
 
     var orderCount = 0
     while (orderCount < 10) {
-        placeOrder(uniquePatrons.random(), menuList.random())
+//        placeOrder(uniquePatrons.random(), menuList.random())
+        placeOrder(uniquePatrons.myRandom(), menuList.myRandom())
         orderCount++
     }
 

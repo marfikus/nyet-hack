@@ -1,5 +1,6 @@
 package com.bnr.nyethack
 
+import com.bnr.nyethack.extensions.myRandom as randomizer
 import java.io.File
 
 class Player(_name: String,
@@ -42,7 +43,7 @@ class Player(_name: String,
     private fun selectHometown() = File("/home/alex/IdeaProjects/NyetHack/src/data/towns.txt")
         .readText()
         .split("\n")
-        .random()
+        .randomizer()
 
     fun castFireball(numFireballs: Int = 2) =
         println("A glass of Fireball springs into existence. (x$numFireballs)")
